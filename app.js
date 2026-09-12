@@ -1,4 +1,4 @@
-const styleLayers=['premium.css','design-final.css'];
+const styleLayers=['premium.css','design-final.css','reference-final.css'];
 styleLayers.forEach(file=>{const link=document.createElement('link');link.rel='stylesheet';link.href=`./${file}`;document.head.appendChild(link);});
 
 const screens=[...document.querySelectorAll('.screen')];
