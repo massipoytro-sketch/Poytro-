@@ -1,3 +1,8 @@
+const premiumStyles=document.createElement('link');
+premiumStyles.rel='stylesheet';
+premiumStyles.href='./premium.css';
+document.head.appendChild(premiumStyles);
+
 const screens=[...document.querySelectorAll('.screen')];
 const navs=[...document.querySelectorAll('[data-nav]')];
 
@@ -13,7 +18,6 @@ function route(){
 window.addEventListener('hashchange',route);
 window.addEventListener('DOMContentLoaded',route);
 
-// Small prototype interactions kept separate from the visual layer.
 document.addEventListener('click',event=>{
   const copy=event.target.closest('[data-copy]');
   if(copy){
