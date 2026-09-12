@@ -18,12 +18,14 @@ jobs:
           test -f styles.css
           test -f premium.css
           test -f design-final.css
+          test -f reference-final.css
           test -f app.js
       - name: Validate stylesheet and script references
         run: |
           grep -q 'styles.css' index.html
           grep -q "premium.css" app.js
           grep -q "design-final.css" app.js
+          grep -q "reference-final.css" app.js
       - name: Check JavaScript syntax
         run: node --check app.js
       - name: Check HTML structure
