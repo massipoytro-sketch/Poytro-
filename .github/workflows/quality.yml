@@ -1,0 +1,37 @@
+name: Poytro Quality Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate required files
+        run: |
+          test -f index.html
+          test -f styles.css
+          test -f premium.css
+          test -f design-final.css
+          test -f app.js
+      - name: Validate stylesheet and script references
+        run: |
+          grep -q 'styles.css' index.html
+          grep -q "premium.css" app.js
+          grep -q "design-final.css" app.js
+      - name: Check JavaScript syntax
+        run: node --check app.js
+      - name: Check HTML structure
+        run: |
+          grep -q '<!doctype html>' index.html
+          grep -q '<html' index.html
+          grep -q '</html>' index.html
+          grep -q 'id="dashboard"' index.html
+          grep -q 'id="offers"' index.html
+          grep -q 'id="withdraw"' index.html
+          grep -q 'id="profile"' index.html
