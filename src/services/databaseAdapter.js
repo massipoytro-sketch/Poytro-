@@ -7,10 +7,8 @@ async function rows(table, userId = null) {
   const client = requireSupabase();
   if (userId) {
     const filtered = await client.from(table).select('*').eq('user_id', userId);
-    if (!filtered.error) return filtered.data || [];
-    const fallback = await client.from(table).select('*');
-    if (fallback.error) throw fallback.error;
-    return fallback.data || [];
+    if (filtered.error) return [];
+    return filtered.data || [];
   }
   const result = await client.from(table).select('*');
   if (result.error) throw result.error;
