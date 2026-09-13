@@ -2,6 +2,7 @@ import React,{useState} from 'react';
 import {PageShell} from '../components/ui/PageShell';
 import {useMember} from '../app/MemberContext';
 import {databaseAdapter} from '../services/databaseAdapter';
+import {supabase} from '../services/supabaseClient';
 
 const num=n=>Number(n||0).toLocaleString();
 
@@ -21,7 +22,19 @@ const faqs=['How to earn coins?','When will I get my rewards?','How to withdraw 
 export function HelpPage(){return <PageShell eyebrow="SUPPORT / HELP" title="Help Center" description="Find quick answers and contact support when you need help."><div className="help-search">⌕ <span>Search for help...</span></div><div className="faq-list"><h3>Frequently Asked Questions</h3>{faqs.map(q=><button key={q}>{q}<span>›</span></button>)}</div><div className="contact-card"><h3>Contact Us</h3><div>✉ <span>Support through your configured platform channel</span></div><button className="primary small">● Live Chat</button></div></PageShell>}
 
 export function AssistantPage(){
- const {member,user}=useMember(); const [text,setText]=useState(''); const [busy,setBusy]=useState(false); const [messages,setMessages]=useState([{role:'assistant',content:'Hello! 👋 I am GainiRen AI. I can help you understand offers, rewards, withdrawals and your account.'}]);
- const send=async(value=text)=>{if(!value.trim()||busy)return;setText('');setMessages(m=>[...m,{role:'user',content:value}]);setBusy(true);try{const safe={profile:member?.profile,wallet:member?.wallet,offers:(member?.offers||[]).slice(0,10),transactions:(member?.transactions||[]).slice(0,10),referrals:(member?.referrals||[]).slice(0,10)};const res=await fetch('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:value,userId:user?.id,context:safe})});const data=await res.json();if(!res.ok)throw new Error(data.error||'AI request failed');setMessages(m=>[...m,{role:'assistant',content:data.reply}]);}catch(e){setMessages(m=>[...m,{role:'assistant',content:`I could not reach the AI service yet: ${e.message}`}]);}finally{setBusy(false)}};
- return <PageShell eyebrow="SUPPORT / GAINIREN AI" title="GainiRen AI" description="Your AI reward assistant, connected to your account context."><div className="chat"><div className="ai-head"><span className="ai-orb">✦</span><div><b>GainiRen AI</b><small>{busy?'Thinking…':'Online • ready to help'}</small></div></div><div className="chat-history">{messages.map((m,i)=><div className={'bubble '+(m.role==='user'?'user':'ai')} key={i}>{m.content}</div>)}</div><div className="chat-suggestions"><button onClick={()=>send('How can I earn more coins?')}>How can I earn more coins?</button><button onClick={()=>send('What offers are available for me?')}>What offers are available for me?</button><button onClick={()=>send('Explain my current balance')}>Explain my current balance</button></div><div className="chat-input"><input value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()} placeholder="Type a message..."/><button disabled={busy} className="primary" onClick={()=>send()}>↗</button></div></div></PageShell>
+ const {member,user}=useMember(); const [text,setText]=useState(''); const [busy,setBusy]=useState(false); const [messages,setMessages]=useState([{role:'assistant',content:'Hello! 👋 I am GainiRen AI. I am connected to your signed-in GainiRen account and can help with your balance, offers, rewards, referrals and withdrawals.'}]);
+ const send=async(value=text)=>{
+   if(!value.trim()||busy)return;
+   setText('');setMessages(m=>[...m,{role:'user',content:value}]);setBusy(true);
+   try{
+     if(!supabase)throw new Error('Supabase is not configured.');
+     const {data:{session}}=await supabase.auth.getSession();
+     if(!session?.access_token)throw new Error('Your session expired. Please sign in again.');
+     const res=await fetch('/api/ai',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({message:value})});
+     const data=await res.json();if(!res.ok)throw new Error(data.error||'AI request failed');
+     setMessages(m=>[...m,{role:'assistant',content:data.reply}]);
+   }catch(e){setMessages(m=>[...m,{role:'assistant',content:`I could not reach GainiRen AI: ${e.message}`}]);}
+   finally{setBusy(false)}
+ };
+ return <PageShell eyebrow="SUPPORT / GAINIREN AI" title="GainiRen AI" description="A private AI assistant using your authenticated account data from the existing database."><div className="chat"><div className="ai-head"><span className="ai-orb">✦</span><div><b>GainiRen AI</b><small>{busy?'Reading your account and thinking…':'Online • connected to your account'}</small></div></div><div className="chat-history">{messages.map((m,i)=><div className={'bubble '+(m.role==='user'?'user':'ai')} key={i}>{m.content}</div>)}</div><div className="chat-suggestions"><button onClick={()=>send('How can I earn more coins?')}>How can I earn more coins?</button><button onClick={()=>send('What offers are available for me?')}>What offers are available for me?</button><button onClick={()=>send('Explain my current balance')}>Explain my current balance</button></div><div className="chat-input"><input value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()} placeholder="Type a message..."/><button disabled={busy} className="primary" onClick={()=>send()}>↗</button></div></div></PageShell>
 }
