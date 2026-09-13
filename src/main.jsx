@@ -11,5 +11,6 @@ import './styles/chest.css';
 import './styles/public.css';
 import './styles/finish.css';
 import './styles/navigation-finish.css';
+import './styles/reference-final.css';
 
 createRoot(document.getElementById('root')).render(<App />);
