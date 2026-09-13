@@ -1,13 +1,16 @@
-# Poytro-
+# GainiRen Rewards Platform
 
-Premium rewards dashboard prototype inspired by the supplied GainiRen reference design.
+This branch is the new mobile-first frontend architecture for GainiRen.
 
 ## Design direction
-- Dark navy interface with blue/purple neon glow
-- Premium rounded cards and strong hierarchy
-- Desktop sidebar + mobile bottom navigation
-- Responsive dashboard layout
-- No fake integrations or admin panel
+Dark premium rewards dashboard with purple/blue neon accents, desktop sidebar, mobile bottom navigation, reward hero, balance cards, earning categories, activity, referrals, store, withdrawal and support surfaces.
 
-## Current milestone
-The dashboard shell is intentionally built from scratch in a single lightweight HTML/CSS/JS prototype. The next stage can split the UI into production components after the visual direction is approved.
+## Architecture
+- `src/app` — application shell and routing state
+- `src/components` — reusable navigation, dashboard and page components
+- `src/data` — temporary UI-only mock data
+- `src/styles` — tokens, global rules, layout, components and responsive rules
+- `src/services` — reserved for the existing backend/database integration phase
+
+The current data is presentation-only. No database schema is changed by this redesign.
+The Admin system remains separate.
