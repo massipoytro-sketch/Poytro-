@@ -1,0 +1,12 @@
+import React from 'react';
+import {PageShell} from '../components/ui/PageShell';
+
+const methods=[['▣','Gift Cards','Redeem eligible points for supported gift cards.'],['₿','Crypto','Digital payout method when enabled for your account.'],['↗','Cash rewards','Available payout routes depend on configuration.']];
+
+export function WithdrawPage(){return <PageShell eyebrow="REWARDS / WITHDRAW" title="Choose your reward" description="Your available balance is shown here before redemption." action={<button className="secondary">Withdrawal history</button>}>
+  <div className="withdraw-layout"><div className="withdraw-balance"><small>Available balance</small><strong>2,450 <i>pts</i></strong><span>Live balance will come from your connected account database.</span><button className="primary">Continue</button></div><div className="method-grid">{methods.map(([icon,title,desc])=><article className="method" key={title}><span>{icon}</span><h3>{title}</h3><p>{desc}</p><button className="secondary">Select</button></article>)}</div></div>
+</PageShell>}
+
+export function StorePage(){return <PageShell eyebrow="REWARDS / STORE" title="Rewards Store" description="Explore the rewards available to your account."><div className="resource-grid"><article className="resource-card"><div className="resource-brand">$</div><div><span className="tag">Featured</span><h3>Digital reward</h3><p>Reward inventory will be loaded from the existing backend.</p></div><div className="resource-footer"><strong>1,500 <i>pts</i></strong><button className="primary small">View</button></div></article><article className="resource-card"><div className="resource-brand">★</div><div><span className="tag">Popular</span><h3>Premium reward</h3><p>Availability and pricing are controlled by the backend.</p></div><div className="resource-footer"><strong>2,500 <i>pts</i></strong><button className="primary small">View</button></div></article></div></PageShell>}
+
+export function LeaderboardPage(){return <PageShell eyebrow="REWARDS / LEADERBOARD" title="Leaderboard" description="Your real ranking will appear here when connected to the existing member data."><div className="activity-card leaderboard-card"><div className="activity-row"><span className="activity-icon">♛</span><div><b>Your position</b><small>Ranking is not loaded in presentation mode.</small></div><strong>—</strong><small className="time">Live data</small></div></div></PageShell>}
