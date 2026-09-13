@@ -1,14 +1,16 @@
-import React from 'react';
-import {PageShell,FilterBar} from '../components/ui/PageShell';
+import React,{useState} from 'react';
+import {PageShell} from '../components/ui/PageShell';
 import {offers} from '../data/mock';
 
 export default function OffersPage(){
-  return <PageShell eyebrow="EARN / OFFERS" title="Discover offers" description="Choose an opportunity and complete it according to the partner rules." action={<button className="secondary">How it works</button>}>
-    <FilterBar/>
-    <div className="resource-grid offers-page-grid">{offers.map((o,i)=><article className={'resource-card '+o.tone} key={o.brand}>
-      <div className="resource-brand">{o.brand[0]}</div>
-      <div><span className="tag">{o.tag}</span><h3>{o.title}</h3><p>{o.brand} partner opportunity. Reward shown is presentation data until live provider data is connected.</p></div>
-      <div className="resource-footer"><strong>+{o.reward} <i>pts</i></strong><button className="primary small">View offer</button></div>
-    </article>)}</div>
-  </PageShell>;
+ const [tab,setTab]=useState('All');
+ const tabs=['All','Popular','Trending','New'];
+ return <PageShell eyebrow="EARN / OFFERS" title="Offers" description="Complete eligible partner offers and collect coins after verification." action={<button className="secondary">How it works</button>}>
+   <div className="filter-bar">{tabs.map(x=><button key={x} onClick={()=>setTab(x)} className={'filter '+(tab===x?'active':'')}>{x}</button>)}</div>
+   <div className="earn-list">{offers.map(o=><article className={'earn-row '+o.tone} key={o.brand}>
+     <div className="earn-icon">{o.icon}</div>
+     <div className="earn-copy"><span className="tag">{o.tag}</span><h3>{o.brand}</h3><p>{o.title}</p></div>
+     <div className="earn-reward"><strong>🪙 {o.reward}</strong><button className="primary small">Start</button></div>
+   </article>)}</div>
+ </PageShell>;
 }
