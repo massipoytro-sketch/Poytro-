@@ -1,9 +1,37 @@
 import React from 'react';
+import {PageShell,FilterBar} from './ui/PageShell';
+import OffersPage from '../pages/OffersPage';
+import {WithdrawPage,StorePage,LeaderboardPage} from '../pages/RewardsPage';
+import {ReferralsPage,ProfilePage,HelpPage,AssistantPage} from '../pages/AccountPages';
+
 const pageData={
- offers:['Offers','Browse partner opportunities and choose what fits you.'], surveys:['Surveys','Answer research surveys and earn points for your time.'], tasks:['Tasks','Small actions with clear rewards and progress.'], games:['Games','Play selected games and collect rewards.'], withdraw:['Withdraw','Convert your available points into supported rewards.'], store:['Rewards Store','Spend your points on rewards you want.'], leaderboard:['Leaderboard','See how you are progressing against other members.'], referrals:['Referrals','Invite friends and earn from eligible referral activity.'], profile:['Profile','Manage your member profile and preferences.'], help:['Help Center','Answers, guidance and support for your account.'], assistant:['GainiRen AI','Get help navigating GainiRen and understanding rewards.']};
-const cards=['CPAGrip','TimeWall','CPX','Featured Partner'];
-export function StandardPage({type}){const [title,desc]=pageData[type]||pageData.offers; if(type==='withdraw')return <Withdraw/>; if(type==='referrals')return <Referrals/>; if(type==='assistant')return <Assistant/>; if(type==='profile')return <Profile/>; return <div className="page"><div className="page-title"><div><span className="eyebrow">GAINIREN / {type.toUpperCase()}</span><h1>{title}</h1><p>{desc}</p></div><button className="primary">Refresh ↻</button></div><div className="filter-bar"><button className="filter active">All</button><button className="filter">Highest reward</button><button className="filter">Quick</button><button className="filter">New</button></div><div className="resource-grid">{cards.map((name,i)=><article className="resource-card" key={name}><div className="resource-brand">{name[0]}</div><div><span className="tag">{i===0?'Featured':'Available'}</span><h3>{name} opportunity</h3><p>Complete this activity following the provider rules.</p></div><div className="resource-footer"><strong>+{850-i*130} <i>pts</i></strong><button className="primary small">View</button></div></article>)}</div></div>}
-function Withdraw(){return <div className="page"><div className="page-title"><div><span className="eyebrow">REWARDS / WITHDRAW</span><h1>Choose your reward</h1><p>Your available balance is ready for eligible redemption.</p></div></div><div className="withdraw-layout"><div className="withdraw-balance"><small>Available</small><strong>2,450 <i>pts</i></strong><span>Minimum redemption depends on the reward method.</span></div><div className="method-grid">{['Gift Cards','Crypto','Cash rewards'].map((x,i)=><article className="method" key={x}><span>{['▣','₿','↗'][i]}</span><h3>{x}</h3><p>Coming through supported payout configuration.</p><button className="secondary">Select</button></article>)}</div></div></div>}
-function Referrals(){return <div className="page"><div className="page-title"><div><span className="eyebrow">REWARDS / REFERRALS</span><h1>Invite & earn together</h1><p>Share your referral code and track eligible activity.</p></div></div><div className="referral-card"><div><small>Your referral code</small><strong>GAINIREN123</strong></div><button className="primary">Copy code</button><div className="ref-stats"><span><b>24</b>Invited</span><span><b>8</b>Active</span><span><b>1,920</b>Points earned</span></div></div></div>}
-function Profile(){return <div className="page"><div className="page-title"><div><span className="eyebrow">ACCOUNT</span><h1>Your profile</h1><p>Keep your member details and preferences up to date.</p></div></div><div className="profile-card"><div className="big-avatar">A</div><div><h2>Ahmed</h2><p>Member account</p></div><button className="secondary">Edit profile</button></div><div className="settings-list"><div><b>Email preferences</b><span>Manage notifications and updates</span><button className="toggle on">●</button></div><div><b>Security</b><span>Password, sessions and sign-in</span><button className="secondary">Manage</button></div></div></div>}
-function Assistant(){return <div className="page"><div className="page-title"><div><span className="eyebrow">SUPPORT</span><h1>GainiRen AI</h1><p>A helpful guide for the member experience.</p></div></div><div className="chat"><div className="bubble ai">Hi Ahmed 👋 I can help you find offers, understand your points, or navigate GainiRen.</div><div className="bubble user">How can I earn more points?</div><div className="chat-input"><input placeholder="Ask GainiRen AI..."/><button className="primary">Send</button></div></div></div>}
+ surveys:['Surveys','Answer research surveys and earn points for your time.'],
+ tasks:['Tasks','Small actions with clear rewards and clear progress.'],
+ games:['Games','Play selected games and collect rewards.']
+};
+
+function ActivityPage({type}){
+ const [title,description]=pageData[type]||['Earn','Explore available opportunities.'];
+ return <PageShell eyebrow={`EARN / ${type.toUpperCase()}`} title={title} description={description} action={<button className="secondary">How it works</button>}>
+  <FilterBar items={['All','Highest reward','Quick','New']}/>
+  <div className="resource-grid">
+   {['Featured opportunity','Quick opportunity','New opportunity','Recommended'].map((name,i)=><article className="resource-card" key={name}>
+    <div className="resource-brand">{type[0].toUpperCase()}</div>
+    <div><span className="tag">{i===0?'Featured':'Available'}</span><h3>{name}</h3><p>Provider content will be loaded from the connected rewards system.</p></div>
+    <div className="resource-footer"><strong>+{850-i*120} <i>pts</i></strong><button className="primary small">View</button></div>
+   </article>)}
+  </div>
+ </PageShell>;
+}
+
+export function StandardPage({type}){
+ if(type==='offers') return <OffersPage/>;
+ if(type==='withdraw') return <WithdrawPage/>;
+ if(type==='store') return <StorePage/>;
+ if(type==='leaderboard') return <LeaderboardPage/>;
+ if(type==='referrals') return <ReferralsPage/>;
+ if(type==='profile') return <ProfilePage/>;
+ if(type==='help') return <HelpPage/>;
+ if(type==='assistant') return <AssistantPage/>;
+ return <ActivityPage type={type}/>;
+}
