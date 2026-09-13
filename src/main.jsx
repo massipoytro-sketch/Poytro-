@@ -13,5 +13,6 @@ import './styles/finish.css';
 import './styles/navigation-finish.css';
 import './styles/reference-final.css';
 import './styles/reference-mobile-final.css';
+import './styles/reference-public-final.css';
 
 createRoot(document.getElementById('root')).render(<App />);
